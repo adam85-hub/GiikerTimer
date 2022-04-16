@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     StyleSheet,
     Pressable,
-    Alert
+    Alert,
+    Text
 } from 'react-native';
 
 import { BleManager } from 'react-native-ble-plx';
@@ -12,8 +13,12 @@ import Giiker from 'react-native-giiker';
 import Timer from './Timer';
 import useTimer from './Hooks/useTimer';
 
+const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
+
 const Root = () => {
     const timer = useTimer();
+    const [cubeConnected, setCubeConnected] = useState(false);
+
     const bleManager = new BleManager();
     let giiker;
 
@@ -52,13 +57,15 @@ const Root = () => {
     function setupCubeEvents() {
         // Events
         giiker.on("connected", () => {
-            Alert.alert("Success!", "Successfully connected to GiiKER cube");
+            Alert.alert("Sukces!", "Połączono z kostką GiiKER");
+            setCubeConnected(true);
         });
         giiker.on("disconnected", () => {
             console.log("Giiker disconnected!");
+            setCubeConnected(false);
         });
+
         giiker.on("move", (move) => {
-            console.log(move);
             console.log(giiker.stateString);
         });
         giiker.on("battery", (battery) => {
@@ -67,23 +74,22 @@ const Root = () => {
         giiker.on("move count", (count) => {
             console.log(count);
         });
-        giiker.on("update state", () => {
-            console.log(giiker.stateString);
-        });
     }
 
     const onPressIn = () => {
-        if (timer.isRunning === false) {
-            timer.reset();
-            timer.start();
+        if (timer.isRunning === true) {
+            timer.stop();
         }
-        else timer.stop();
     }
 
     return (
         <Pressable onPressIn={onPressIn}>
             <View style={styles.container}>
-                <Timer running={timer.isRunning} time={timer.time}></Timer>
+                {cubeConnected ?
+                    <Timer running={timer.isRunning} time={timer.time}></Timer>
+                    :
+                    <Text style={styles.connectingText}>Łączenie z kostką...</Text>
+                }                
             </View>
         </Pressable>
     );
@@ -95,6 +101,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         height: "100%"
+    },
+    connectingText: {
+        fontSize: 40
     }
 });
 

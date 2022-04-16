@@ -6,16 +6,22 @@ import {
   Alert
 } from 'react-native';
 
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+
 import Root from './src/Root';
 
 import { LogBox } from 'react-native';
-
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const App = () => {
 
   useEffect(() => {
     checkBlePermissions();
+    BluetoothStateManager.getState().then(async (state) => {
+      if (state === "PoweredOff") {
+        await BluetoothStateManager.requestToEnable();
+      }
+    });
   }, [])
 
   async function checkBlePermissions() {
