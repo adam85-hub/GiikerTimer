@@ -58,7 +58,7 @@ const Root = () => {
     
     useEffect(() => {
         if (timer.isRunning === true && isSolved === true) {
-            setTimes(prev => [...prev, timer.time]);
+            setTimes(prev => [...prev, Math.round((timer.time + Number.EPSILON) * 10) / 10]);
             timer.stop();
             timer.reset();
         }
@@ -126,7 +126,7 @@ const Root = () => {
                     <Text style={styles.infoText}>{cubeConnected == false ? "Łączenie z kostką..." : isSolved ? "Pomieszaj kostkę" : "Gotowy?"}</Text>
                 }                
             </View>
-            <TimesTable times={[10]}></TimesTable>
+            <TimesTable times={times}></TimesTable>
         </Pressable>
     );
 };
