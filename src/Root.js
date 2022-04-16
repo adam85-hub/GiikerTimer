@@ -7,17 +7,24 @@ import {
     Text
 } from 'react-native';
 
+import { Subject } from 'rxjs';
 import { BleManager } from 'react-native-ble-plx';
 import Giiker from 'react-native-giiker';
 
 import Timer from './Timer';
 import useTimer from './Hooks/useTimer';
+import TimesTable from './TimesTable';
 
 const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 
 const Root = () => {
     const timer = useTimer();
     const [cubeConnected, setCubeConnected] = useState(false);
+    const [isSolved, setIsSolved] = useState(false);
+    const [isReady, setIsReady] = useState(false);
+    const [onMove, setOnMove] = useState(new Subject());
+
+    const [times, setTimes] = useState([]);
 
     const bleManager = new BleManager();
     let giiker;
@@ -33,6 +40,29 @@ const Root = () => {
             sub.remove();
         }
     }, [])
+
+    useEffect(() => {
+        if (isReady === false) return;
+
+        const sub = onMove.subscribe(() => {
+            if (isReady === true) {
+                timer.start();
+                setIsReady(false);
+            }
+        })
+
+        return () => {
+            sub.unsubscribe();
+        }
+    }, [isReady])
+    
+    useEffect(() => {
+        if (timer.isRunning === true && isSolved === true) {
+            setTimes(prev => [...prev, timer.time]);
+            timer.stop();
+            timer.reset();
+        }
+    }, [isSolved])
 
     function scanAndConnect() {
         bleManager.startDeviceScan(null, null, async (error, device) => {
@@ -59,6 +89,7 @@ const Root = () => {
         giiker.on("connected", () => {
             Alert.alert("Sukces!", "Połączono z kostką GiiKER");
             setCubeConnected(true);
+            setIsSolved(solvedState === giiker.stateString);   
         });
         giiker.on("disconnected", () => {
             console.log("Giiker disconnected!");
@@ -66,7 +97,11 @@ const Root = () => {
         });
 
         giiker.on("move", (move) => {
-            console.log(giiker.stateString);
+            // console.log(giiker.stateString);
+
+            onMove.next("move");            
+
+            setIsSolved(solvedState === giiker.stateString);         
         });
         giiker.on("battery", (battery) => {
             console.log(battery);
@@ -77,20 +112,21 @@ const Root = () => {
     }
 
     const onPressIn = () => {
-        if (timer.isRunning === true) {
-            timer.stop();
+        if (isSolved === false && cubeConnected === true && timer.isRunning === false) {
+            setIsReady(true);    
         }
     }
 
     return (
         <Pressable onPressIn={onPressIn}>
             <View style={styles.container}>
-                {cubeConnected ?
+                {cubeConnected && (timer.isRunning || isReady == true) ?
                     <Timer running={timer.isRunning} time={timer.time}></Timer>
                     :
-                    <Text style={styles.connectingText}>Łączenie z kostką...</Text>
+                    <Text style={styles.infoText}>{cubeConnected == false ? "Łączenie z kostką..." : isSolved ? "Pomieszaj kostkę" : "Gotowy?"}</Text>
                 }                
             </View>
+            <TimesTable times={[10]}></TimesTable>
         </Pressable>
     );
 };
@@ -102,7 +138,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         height: "100%"
     },
-    connectingText: {
+    infoText: {
         fontSize: 40
     }
 });

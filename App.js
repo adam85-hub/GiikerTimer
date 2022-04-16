@@ -17,10 +17,12 @@ const App = () => {
 
   useEffect(() => {
     checkBlePermissions();
-    BluetoothStateManager.getState().then(async (state) => {
+    BluetoothStateManager.getState().then(async (state) => { //Ask to turn on bluetooth
       if (state === "PoweredOff") {
         await BluetoothStateManager.requestToEnable();
       }
+
+      return Promise.resolve();
     });
   }, [])
 
