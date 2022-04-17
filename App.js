@@ -7,6 +7,9 @@ import {
 } from 'react-native';
 
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+import LocationEnabler from 'react-native-location-enabler';
+
+const { useLocationSettings } = LocationEnabler;
 
 import Root from './src/Root';
 
@@ -14,16 +17,21 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const App = () => {
+  const [locationEnabled, requestLocationOn] = useLocationSettings({
+    needBle: true
+  });
 
   useEffect(() => {
-    checkBlePermissions();
-    BluetoothStateManager.getState().then(async (state) => { //Ask to turn on bluetooth
-      if (state === "PoweredOff") {
+    async function effect() {
+      await checkBlePermissions();
+      const bluetoothState = await BluetoothStateManager.getState();
+      if (bluetoothState === "PoweredOff") {
         await BluetoothStateManager.requestToEnable();
       }
+      if (!locationEnabled) requestLocationOn();
+    }
 
-      return Promise.resolve();
-    });
+    effect();
   }, [])
 
   async function checkBlePermissions() {

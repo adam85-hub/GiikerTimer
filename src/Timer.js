@@ -6,7 +6,7 @@ import {
 } from 'react-native';
 
 const Timer = (props) => {
-    let sec = props.time;    //todo: Change this to formatTime function
+    let sec = props.time;
 
     let min = Math.floor(sec / 60);
     sec = sec - (min * 60);
