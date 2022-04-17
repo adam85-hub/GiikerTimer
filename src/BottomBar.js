@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         height: "15%",
         width: "100%",
         backgroundColor: "#eee",
-        justifyContent: "space-between"
+        justifyContent: 'space-between'
     },
     text: {
         fontSize: 20

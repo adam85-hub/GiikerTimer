@@ -3,7 +3,6 @@ import {
     View,
     StyleSheet,
     Pressable,
-    Alert,
     Text
 } from 'react-native';
 
@@ -11,12 +10,15 @@ import { Subject } from 'rxjs';
 import { BleManager } from 'react-native-ble-plx';
 import Giiker from 'react-native-giiker';
 
+//* Components
 import Timer from './Timer';
 import useTimer from './Hooks/useTimer';
 import TimesTable from './TimesTable';
 import BottomBar from './BottomBar';
 
+//* Helper functions
 import roundTo from './Helpers/roundTo';
+import generateMockTimes from './Helpers/generateMockTimes';
 
 const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 const bleManager = new BleManager();
@@ -136,17 +138,19 @@ const Root = () => {
     }
 
     return (
-        <Pressable onPressIn={onPressIn}>
-            <View style={styles.container}>
-                {cubeConnected && (timer.isRunning || isReady == true) ?
-                    <Timer running={timer.isRunning} time={timer.time}></Timer>
-                    :
-                    <Text style={styles.infoText}>{cubeConnected == false ? "Łączenie z kostką..." : isSolved ? "Pomieszaj kostkę" : "Gotowy?"}</Text>
-                }                
-            </View>
+        <View>
+            <Pressable onPressIn={onPressIn}>
+                <View style={styles.container}>
+                    {cubeConnected && (timer.isRunning || isReady == true) ?
+                        <Timer running={timer.isRunning} time={timer.time}></Timer>
+                        :
+                        <Text style={styles.infoText}>{cubeConnected == false ? "Łączenie z kostką..." : isSolved ? "Pomieszaj kostkę" : "Gotowy?"}</Text>
+                    }                
+                </View>
+                <BottomBar tps={tps} times={times}></BottomBar>
+            </Pressable>
             <TimesTable times={times}></TimesTable>
-            <BottomBar tps={tps} times={times}></BottomBar>
-        </Pressable>
+        </View>
     );
 };
 

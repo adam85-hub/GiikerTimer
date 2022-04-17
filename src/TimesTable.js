@@ -1,15 +1,16 @@
-import React from 'react';
+import React, {useEffect, useRef} from 'react';
 
 import {
     Text,
     StyleSheet,
-    View
+    ScrollView
 } from 'react-native';
 
 import formatTime from './Helpers/formatTime';
 
-const TimesTable = (props) => {
+const TimesTable = (props) => {    
     if (props.times === undefined || props.times.length === 0) return null;
+    let svRef = useRef(null);
     let times = [];
     let bestIndex = 0;
 
@@ -25,11 +26,17 @@ const TimesTable = (props) => {
     }
 
     times[bestIndex].isBest = true;
+    
+    useEffect(() => {
+        if (!svRef.current) return;
+        
+        svRef.current.scrollToEnd();
+    })
 
     return (
-        <View style={styles.container}>                
+        <ScrollView style={styles.container} ref={svRef}>            
             {times.map((time, index) => <SingleTime time={time} key={index}></SingleTime>)}
-        </View>
+        </ScrollView>
     )
 }
 
@@ -48,7 +55,6 @@ const styles = StyleSheet.create({
         top: 0,
         zIndex: 2137,
         height: "85%",
-        overflow: "scroll"
     },
     timeText: {
         fontSize: 20,
