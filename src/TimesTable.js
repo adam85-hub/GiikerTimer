@@ -14,11 +14,12 @@ const TimesTable = (props) => {
     let bestIndex = 0;
 
     for (let i = 0; i < props.times.length; i++) {
-        if (props.times[i] < props.times[bestIndex]) bestIndex = i;
+        if (props.times[i].time < props.times[bestIndex].time) bestIndex = i;
 
         times.push({
             index: i+1,
-            time: props.times[i],
+            time: props.times[i].time,
+            tps: props.times[i].tps,
             isBest: false
         });
     }
@@ -26,7 +27,7 @@ const TimesTable = (props) => {
     times[bestIndex].isBest = true;
 
     return (
-        <View style={styles.container}>
+        <View style={styles.container}>                
             {times.map((time, index) => <SingleTime time={time} key={index}></SingleTime>)}
         </View>
     )
@@ -34,7 +35,9 @@ const TimesTable = (props) => {
 
 function SingleTime(props) {
     return (
-        <Text style={[styles.timeText, props.time.isBest ? styles.bestTime : null]}>{props.time.index + ") " + formatTime(props.time.time)}</Text>
+        <Text style={[styles.timeText, props.time.isBest ? styles.bestTime : null]}>
+            {props.time.index + ") " + formatTime(props.time.time) + " tps: " + props.time.tps}
+        </Text>
     );
 }
 
@@ -46,7 +49,7 @@ const styles = StyleSheet.create({
         zIndex: 2137,
     },
     timeText: {
-        fontSize: 17,
+        fontSize: 20,
         color: "black"
     },
     bestTime: {

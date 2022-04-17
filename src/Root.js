@@ -14,8 +14,12 @@ import Giiker from 'react-native-giiker';
 import Timer from './Timer';
 import useTimer from './Hooks/useTimer';
 import TimesTable from './TimesTable';
+import BottomBar from './BottomBar';
+
+import roundTo from './Helpers/roundTo';
 
 const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
+const bleManager = new BleManager();
 
 const Root = () => {
     const timer = useTimer();
@@ -23,10 +27,10 @@ const Root = () => {
     const [isSolved, setIsSolved] = useState(false);
     const [isReady, setIsReady] = useState(false);
     const [onMove, setOnMove] = useState(new Subject());
+    const [moveCount, setMoveCount] = useState(0);
+    const [tps, setTps] = useState(0);
 
-    const [times, setTimes] = useState([]);
-
-    const bleManager = new BleManager();
+    const [times, setTimes] = useState([]);    
     let giiker;
 
     useEffect(() => {
@@ -42,11 +46,12 @@ const Root = () => {
     }, [])
 
     useEffect(() => {
-        if (isReady === false) return;
+        if (isReady == false) return;
 
         const sub = onMove.subscribe(() => {
             if (isReady === true) {
                 timer.start();
+                setMoveCount(0);
                 setIsReady(false);
             }
         })
@@ -59,11 +64,26 @@ const Root = () => {
     
     useEffect(() => {
         if (timer.isRunning === true && isSolved === true) {
-            setTimes(prev => [...prev, Math.round((timer.time + Number.EPSILON) * 10) / 10]);
+            const newTime = {
+                time: roundTo(1, timer.time),
+                tps: tps
+            }
+
+            setTimes(prev => [...prev, newTime]);
             timer.stop();
             timer.reset();
         }
     }, [isSolved])
+
+    useEffect(() => {
+        if (timer.isRunning == false) return;
+        if (timer.time === 0) {
+            setTps(0);
+            return;
+        }
+
+        setTps(roundTo(1, moveCount / timer.time));
+    }, [moveCount])
 
     function scanAndConnect() {
         bleManager.startDeviceScan(null, null, async (error, device) => {
@@ -78,8 +98,8 @@ const Root = () => {
                     bleManager.stopDeviceScan();
                     giiker = new Giiker(device);
      
-                    await giiker.connect();     
                     setupCubeEvents();
+                    await giiker.connect();     
                 }
             }
         })
@@ -88,7 +108,7 @@ const Root = () => {
     function setupCubeEvents() {
         // Events
         giiker.on("connected", () => {
-            Alert.alert("Sukces!", "Połączono z kostką GiiKER");
+            console.log("Giiker connected!");
             setCubeConnected(true);
             setIsSolved(solvedState === giiker.stateString);   
         });
@@ -99,17 +119,13 @@ const Root = () => {
 
         giiker.on("move", (move) => {
             // console.log(giiker.stateString);
-
             onMove.next("move");            
-
+            setMoveCount(prev => prev + 1);
             setIsSolved(solvedState === giiker.stateString);         
         });
         giiker.on("battery", (battery) => {
             console.log(battery);
-        });
-        giiker.on("move count", (count) => {
-            console.log(count);
-        });
+        }); 
     }
 
     const onPressIn = () => {
@@ -128,6 +144,7 @@ const Root = () => {
                 }                
             </View>
             <TimesTable times={times}></TimesTable>
+            <BottomBar tps={tps}></BottomBar>
         </Pressable>
     );
 };
@@ -141,7 +158,7 @@ const styles = StyleSheet.create({
     },
     infoText: {
         fontSize: 40
-    }
+    },
 });
 
 export default Root;
