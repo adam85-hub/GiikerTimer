@@ -150,7 +150,7 @@ const Root = () => {
                 </View>
                 <BottomBar tps={tps} times={times}></BottomBar>
             </Pressable>
-            <TimesTable times={times}></TimesTable>
+            <TimesTable times={times} onClear={() => setTimes([])}></TimesTable>
         </View>
     );
 };

@@ -39,7 +39,7 @@ const TimesTable = (props) => {
             <ScrollView style={styles.scrollView} ref={svRef}>            
                 {times.map((time, index) => <SingleTime time={time} key={index}></SingleTime>)}
             </ScrollView>
-            <Pressable style={styles.clearBtn}>
+            <Pressable style={styles.clearBtn} onPressIn={props.onClear}>
                 <Text style={styles.btnText}>Wyczyść</Text>
             </Pressable>
         </View>
@@ -70,14 +70,14 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: "#e0e0e0",
         alignContent: "center",
-        justifyContent: "center",
-        padding: 10,
+        justifyContent: "center",       
         marginBottom: 5,
-        borderRadius: 5
+        borderRadius: 5,
+        paddingVertical: 7,
     },
     btnText: {
         textAlign: "center",
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: "bold"
     },
     timeText: {
