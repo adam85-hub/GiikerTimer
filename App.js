@@ -17,22 +17,29 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const App = () => {
-  const [locationEnabled, requestLocationOn] = useLocationSettings({
+  const [locationEnabled, requestLocationEnabled] = useLocationSettings({
     needBle: true
   });
 
   useEffect(() => {
     async function effect() {
       await checkBlePermissions();
-      const bluetoothState = await BluetoothStateManager.getState();
-      if (bluetoothState === "PoweredOff") {
-        await BluetoothStateManager.requestToEnable();
-      }
-      if (!locationEnabled) requestLocationOn();
+      if (!locationEnabled) requestLocationEnabled();      
     }
 
     effect();
   }, [])
+
+  useEffect(() => {
+    if (locationEnabled !== true) return;
+
+    (async () => {
+      const bluetoothState = await BluetoothStateManager.getState();
+      if (bluetoothState === "PoweredOff") {
+        await BluetoothStateManager.requestToEnable();
+      }      
+    })();
+  }, [locationEnabled])
 
   async function checkBlePermissions() {
     const grantedLocation = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);

@@ -53,6 +53,7 @@ const Root = () => {
 
         return () => {
             sub.unsubscribe();
+            sub.remove();
         }
     }, [isReady])
     
