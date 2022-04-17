@@ -21,6 +21,15 @@ import roundTo from './Helpers/roundTo';
 const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 const bleManager = new BleManager();
 
+var mockTimes = [];
+
+for (let i = 1; i <= 12; i++) {
+    mockTimes.push({
+        time: i,
+        tps: i/2
+    });
+}
+
 const Root = () => {
     const timer = useTimer();
     const [cubeConnected, setCubeConnected] = useState(false);
@@ -30,7 +39,7 @@ const Root = () => {
     const [moveCount, setMoveCount] = useState(0);
     const [tps, setTps] = useState(0);
 
-    const [times, setTimes] = useState([]);    
+    const [times, setTimes] = useState([...mockTimes]); 
     let giiker;
 
     useEffect(() => {
@@ -100,6 +109,7 @@ const Root = () => {
      
                     setupCubeEvents();
                     await giiker.connect();     
+                    bleManager.stopDeviceScan();
                 }
             }
         })
@@ -144,7 +154,7 @@ const Root = () => {
                 }                
             </View>
             <TimesTable times={times}></TimesTable>
-            <BottomBar tps={tps}></BottomBar>
+            <BottomBar tps={tps} times={times}></BottomBar>
         </Pressable>
     );
 };
