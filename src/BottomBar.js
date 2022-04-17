@@ -32,9 +32,9 @@ const BottomBar = (props) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>Ao5: {ao5}</Text>
+            <Text style={styles.text}>Ao5: {ao5 === 0 ? "###" : ao5}</Text>
             <Text style={styles.text}>TPS: {props.tps}</Text>
-            <Text style={styles.text}>Ao12: {ao12}</Text>
+            <Text style={styles.text}>Ao12: {ao12 === 0 ? "###" : ao12}</Text>
         </View>
     );
 }

@@ -3,7 +3,9 @@ import React, {useEffect, useRef} from 'react';
 import {
     Text,
     StyleSheet,
-    ScrollView
+    ScrollView,
+    View,
+    Pressable
 } from 'react-native';
 
 import formatTime from './Helpers/formatTime';
@@ -28,15 +30,19 @@ const TimesTable = (props) => {
     times[bestIndex].isBest = true;
     
     useEffect(() => {
-        if (!svRef.current) return;
-        
+        if (!svRef.current) return;        
         svRef.current.scrollToEnd();
     })
 
     return (
-        <ScrollView style={styles.container} ref={svRef}>            
-            {times.map((time, index) => <SingleTime time={time} key={index}></SingleTime>)}
-        </ScrollView>
+        <View style={styles.container}>            
+            <ScrollView style={styles.scrollView} ref={svRef}>            
+                {times.map((time, index) => <SingleTime time={time} key={index}></SingleTime>)}
+            </ScrollView>
+            <Pressable style={styles.clearBtn}>
+                <Text style={styles.btnText}>Wyczyść</Text>
+            </Pressable>
+        </View>
     )
 }
 
@@ -55,6 +61,24 @@ const styles = StyleSheet.create({
         top: 0,
         zIndex: 2137,
         height: "85%",
+        justifyContent: "space-between"
+    },
+    scrollView: {
+        
+    },
+    clearBtn: {
+        width: "100%",
+        backgroundColor: "#e0e0e0",
+        alignContent: "center",
+        justifyContent: "center",
+        padding: 10,
+        marginBottom: 5,
+        borderRadius: 5
+    },
+    btnText: {
+        textAlign: "center",
+        fontSize: 20,
+        fontWeight: "bold"
     },
     timeText: {
         fontSize: 20,

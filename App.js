@@ -17,10 +17,10 @@ import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const App = () => {
+  //#region Permissions
   const [locationEnabled, requestLocationEnabled] = useLocationSettings({
     needBle: true
   });
-
 
   useEffect(() => {
     (async () => {
@@ -53,7 +53,9 @@ const App = () => {
       console.warn(err)
     }
   }
+  //#endregion
 
+  
   return (
     <View>
       <Root></Root>
