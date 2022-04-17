@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   View,
@@ -21,13 +21,12 @@ const App = () => {
     needBle: true
   });
 
-  useEffect(() => {
-    async function effect() {
-      await checkBlePermissions();
-      if (!locationEnabled) requestLocationEnabled();      
-    }
 
-    effect();
+  useEffect(() => {
+    (async () => {
+      await checkBlePermissions();
+      if (!locationEnabled) requestLocationEnabled();
+    })();
   }, [])
 
   useEffect(() => {

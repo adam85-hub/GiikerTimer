@@ -22,6 +22,7 @@ import generateMockTimes from './Helpers/generateMockTimes';
 
 const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 const bleManager = new BleManager();
+let giiker;
 
 const Root = () => {
     const timer = useTimer();
@@ -31,11 +32,10 @@ const Root = () => {
     const [onMove, setOnMove] = useState(new Subject());
     const [moveCount, setMoveCount] = useState(0);
     const [tps, setTps] = useState(0);
-
     const [times, setTimes] = useState([]); 
-    let giiker;
-
-    useEffect(() => {
+    
+    
+    useEffect(() => {        
         const sub = bleManager.onStateChange((state) => {
             if (state == "PoweredOn") {
                 scanAndConnect();
