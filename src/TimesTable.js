@@ -63,17 +63,14 @@ const styles = StyleSheet.create({
         height: "85%",
         justifyContent: "space-between"
     },
-    scrollView: {
-        
-    },
     clearBtn: {
         width: "100%",
         backgroundColor: "#e0e0e0",
         alignContent: "center",
         justifyContent: "center",       
         marginBottom: 5,
-        borderRadius: 5,
         paddingVertical: 7,
+        marginTop: 5
     },
     btnText: {
         textAlign: "center",
