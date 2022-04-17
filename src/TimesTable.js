@@ -47,6 +47,8 @@ const styles = StyleSheet.create({
         left: 5,
         top: 0,
         zIndex: 2137,
+        height: "85%",
+        overflow: "scroll"
     },
     timeText: {
         fontSize: 20,

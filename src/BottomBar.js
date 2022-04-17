@@ -5,6 +5,7 @@ import {
     StyleSheet,
     View
 } from 'react-native';
+import roundTo from './Helpers/roundTo';
 
 const BottomBar = (props) => {  
     let ao5 = 0;
@@ -26,6 +27,8 @@ const BottomBar = (props) => {
         ao12 = ao12 / 12;
     }
     
+    ao5 = roundTo(2, ao5);
+    ao12 = roundTo(2, ao12);
 
     return (
         <View style={styles.container}>
