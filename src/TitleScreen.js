@@ -13,7 +13,7 @@ import RotatingView from "./Helpers/RotatingView";
 
 const TitleScreen = (props) => {
     return (
-        <Pressable style={styles.container}>
+        <Pressable style={styles.container} onPressIn={props.onPress}>
             <RotatingView style={styles.rubikCube}>
                 <Rubik2d/>
             </RotatingView>

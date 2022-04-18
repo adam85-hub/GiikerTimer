@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {
   View,
   PermissionsAndroid,
-  Alert
+  Alert,
+  AppState
 } from 'react-native';
 import { LogBox } from 'react-native';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
@@ -14,7 +15,7 @@ const { useLocationSettings } = LocationEnabler;
 
 import SystemNavigationBar from 'react-native-system-navigation-bar';
 SystemNavigationBar.navigationHide();
-SystemNavigationBar.immersive();
+SystemNavigationBar.stickyImmersive();
 SystemNavigationBar.fullScreen(true);
 
 import HomeScreen from './src/HomeScreen';
@@ -60,11 +61,21 @@ const App = () => {
   }
   //#endregion
 
+  const [titleDisplayed, setTitleDisplayed] = useState(true);
+
+  useEffect(() => {
+    const sub = AppState.addEventListener("change", () => {
+      SystemNavigationBar.fullScreen(true);
+    })
+
+    return () => {
+      sub.remove();
+    }
+  }, [])
 
   return (
     <View>
-      <HomeScreen></HomeScreen>
-      {/* <TitleScreen></TitleScreen> */}
+      {titleDisplayed ? <TitleScreen onPress={() => setTitleDisplayed(false)} /> : <HomeScreen />}
     </View>
   );
 };
