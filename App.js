@@ -1,20 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 
 import {
   View,
   PermissionsAndroid,
   Alert
 } from 'react-native';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LocationEnabler from 'react-native-location-enabler';
-
 const { useLocationSettings } = LocationEnabler;
 
-import Root from './src/Root';
+import HomeScreen from './src/HomeScreen';
+import TitleScreen from './src/TitleScreen';
 
-import { LogBox } from 'react-native';
-LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const App = () => {
   //#region Permissions
@@ -58,7 +58,8 @@ const App = () => {
   
   return (
     <View>
-      <Root></Root>
+      {/* <HomeScreen></HomeScreen> */}
+      <TitleScreen></TitleScreen>
     </View>
   );
 };

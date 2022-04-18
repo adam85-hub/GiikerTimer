@@ -24,7 +24,7 @@ const solvedState = "UUUUUUUUURRRRRRRRRFFFFFFFFFDDDDDDDDDLLLLLLLLLBBBBBBBBB";
 const bleManager = new BleManager();
 let giiker;
 
-const Root = () => {
+const HomeScreen = () => {
     const timer = useTimer();
     const [cubeConnected, setCubeConnected] = useState(false);
     const [isSolved, setIsSolved] = useState(false);
@@ -172,4 +172,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Root;
+export default HomeScreen;
