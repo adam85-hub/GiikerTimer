@@ -139,7 +139,6 @@ const HomeScreen = () => {
 
     return (
         <View>
-            <Text style={styles.author}>Adam Bialik 2022</Text>
             <Pressable onPressIn={onPressIn}>
                 <View style={styles.container}>
                     {cubeConnected && (timer.isRunning || isReady == true) ?
@@ -164,12 +163,7 @@ const styles = StyleSheet.create({
     },
     infoText: {
         fontSize: 40
-    },
-    author: {
-        position: "absolute",
-        right: 0,
-        top: 0
-    },
+    }
 });
 
 export default HomeScreen;

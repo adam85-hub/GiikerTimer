@@ -57,10 +57,10 @@ function SingleTime(props) {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        left: 5,
-        top: 0,
+        right: "1.5%",
+        top: "2%",
         zIndex: 2137,
-        height: "85%",
+        height: "82%",
         justifyContent: "space-between"
     },
     clearBtn: {

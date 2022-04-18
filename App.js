@@ -12,6 +12,11 @@ import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import LocationEnabler from 'react-native-location-enabler';
 const { useLocationSettings } = LocationEnabler;
 
+import SystemNavigationBar from 'react-native-system-navigation-bar';
+SystemNavigationBar.navigationHide();
+SystemNavigationBar.immersive();
+SystemNavigationBar.fullScreen(true);
+
 import HomeScreen from './src/HomeScreen';
 import TitleScreen from './src/TitleScreen';
 
@@ -55,11 +60,11 @@ const App = () => {
   }
   //#endregion
 
-  
+
   return (
     <View>
-      {/* <HomeScreen></HomeScreen> */}
-      <TitleScreen></TitleScreen>
+      <HomeScreen></HomeScreen>
+      {/* <TitleScreen></TitleScreen> */}
     </View>
   );
 };
