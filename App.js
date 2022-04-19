@@ -30,6 +30,15 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
+      const bluetoothPerm1 = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT);
+      const bluetoothPerm2 = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION);
+      
+      if (bluetoothPerm1 == false || bluetoothPerm2 == false) {
+        const granted = await PermissionsAndroid.requestMultiple([PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN, PermissionsAndroid.PERMISSIONS.ACCESS_BACKGROUND_LOCATION]);
+        console.log(granted);
+      }
+      
       await checkBlePermissions();
       if (!locationEnabled) requestLocationEnabled();
     })();
@@ -38,7 +47,7 @@ const App = () => {
   useEffect(() => {
     if (locationEnabled !== true) return;
 
-    (async () => {
+    (async () => {     
       const bluetoothState = await BluetoothStateManager.getState();
       if (bluetoothState === "PoweredOff") {
         await BluetoothStateManager.requestToEnable();
